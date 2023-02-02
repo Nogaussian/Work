@@ -1,0 +1,63 @@
+class Lift:
+    def __init__(self, id, floor):
+        self.id = id
+        self.floor = floor
+        self.destination = None
+    
+    def set_destination(self, floor):
+        self.destination = floor
+    
+    def move(self):
+        if self.destination is not None:
+            if self.floor < self.destination:
+                self.floor += 1
+            elif self.floor > self.destination:
+                self.floor -= 1
+            else:
+                self.destination = None
+    
+    def display(self):
+        return f"Lift {self.id} is on floor {self.floor}"
+
+def closest_lift(lifts, floor):
+    lift_a, lift_b = lifts
+    if abs(lift_a.floor - floor) < abs(lift_b.floor - floor):
+        return lift_a
+    elif abs(lift_a.floor - floor) > abs(lift_b.floor - floor):
+        return lift_b
+    else:
+        if lift_a.floor < lift_b.floor:
+            return lift_a
+        else:
+            return lift_b
+
+lifts = [Lift("A", 0), Lift("B", 6)]
+
+def call_lift(floor):
+    lift = closest_lift(lifts, floor)
+    lift.set_destination(floor)
+    print(f"Lift {lift.id} is coming to pick you up on floor {floor}")
+
+def select_destination(lift_id, floor):
+    for lift in lifts:
+        if lift.id == lift_id:
+            lift.set_destination(floor)
+            print(f"Destination floor {floor} has been set for Lift {lift_id}")
+
+while True:
+    print("Lift Status:")
+    for lift in lifts:
+        print(lift.display())
+    print("Call lift or select destination:")
+    print("1. Call lift")
+    print("2. Select destination")
+    choice = input("Enter your choice: ")
+    if choice == "1":
+        floor = int(input("Enter the floor number: "))
+        call_lift(floor)
+    elif choice == "2":
+        lift_id = input("Enter the lift ID (A or B): ")
+        floor = int(input("Enter the floor number: "))
+        select_destination(lift_id, floor)
+    for lift in lifts:
+        lift.move()
